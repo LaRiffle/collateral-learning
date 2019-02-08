@@ -2,7 +2,12 @@
 
 ## Motivation
 
-Imagine that you train a neural network to perform a specific task, and you discover it has also learned to do another completely different task, which is very sensitive. Is this possible? What can you do to prevent this?
+Imagine that you train a neural network to perform a specific task, and you discover it has also learned information which makes it possible to perform another completely different task, which is very sensitive. Is this possible? What can you do to prevent this?
+
+#### Related but distinct notions
+ > **Transfer learning**: You train a model to perform a specific task, and you reuse this pre-trained model to perform a related task on possibly different data. _The difference with collateral learning is that the second task is of a different nature, while the data used should be closely related to the original one_.
+ 
+ > **Adversarial learning**: You corrupt the input data to fool the model and reduce its performance. _The difference with collateral learning is that you don't modify the input but you try to diclose hidden sensitive information about it using the model ouput which is supposed to be un-sensitive_.
 
 ## Context
 
