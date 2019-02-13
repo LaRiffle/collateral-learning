@@ -11,8 +11,9 @@ def test(args, model, test_loader, return_pred_label=False):
         for data, target in test_loader:
             output = model(data)
             test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
-            pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+            pred = output.argmax(1, keepdim=True)  # get the index of the max log-probability
 
+            # Store all the pred, label pairs to draw the confusion matrix
             pred_labels_batch = torch.stack((pred, target.view_as(pred))).view(2, args.test_batch_size)
             if pred_labels is None:
                 pred_labels = pred_labels_batch

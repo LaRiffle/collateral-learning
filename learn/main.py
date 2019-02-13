@@ -30,6 +30,18 @@ def build_tensor_dataset(data, target):
     return tensor_dataset
 
 
+def get_test_loader(args):
+    """
+    Convenient function to make notebook more readable
+    :return: the test loader
+    """
+    data = load_data()
+    _, _, _, test_data, test_target_char, _ = data
+    test_dataset = build_tensor_dataset(test_data, test_target_char)
+    test_loader = utils.DataLoader(test_dataset, batch_size=args.test_batch_size, shuffle=True)
+    return test_loader
+
+
 def load_data():
 
     train_data, train_target_char, train_target_family = [], [], []
@@ -131,4 +143,8 @@ def main(model_type, args=None, data=None, model=None, optimizer=None, task='cha
         returns.append(model)
     if return_pred_label:
         returns.append(pred_labels)
-    return tuple(returns)
+
+    if len(returns) > 1:
+        return tuple(returns)
+    else:
+        return returns[0]
