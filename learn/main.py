@@ -48,7 +48,7 @@ def load_data():
 
     # The training set
     for i in range(6):
-        with open(f'character_dataset_train{i}.pkl', 'rb') as input_file:
+        with open(f'dataset/character_dataset_train{i}.pkl', 'rb') as input_file:
             training_set = pickle.load(input_file)
             train_data_i, train_target_char_i, train_target_family_i = training_set
             train_data += train_data_i
@@ -56,7 +56,7 @@ def load_data():
             train_target_family += train_target_family_i
 
     # The testing set
-    with open(f'character_dataset_test.pkl', 'rb') as input_file:
+    with open(f'dataset/character_dataset_test.pkl', 'rb') as input_file:
         testing_set = pickle.load(input_file)
         test_data, test_target_char, test_target_family = testing_set
 
