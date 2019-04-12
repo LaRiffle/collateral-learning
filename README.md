@@ -11,7 +11,7 @@ Imagine that you train a neural network to perform a specific task, and you disc
 
 ## Context
 
-Let's assume you have a semi-private **trained** network performing a prediction task of some nature `pred1`/ This means you have a network with the first layers encrypted and the last ones visible in clear. The structure of the network could be written like this: `x -> Private -> output(x) -> Public -> pred1(x)`. For example, `pred1(x)` could be the age based on an face picture input `x`, or the text translation of some speech record.
+Let's assume you have a semi-private **trained** network performing a prediction task of some nature `pred1`. This means you have a network with the first layers encrypted and the last ones visible in clear. The structure of the network could be written like this: `x -> Private -> output(x) -> Public -> pred1(x)`. For example, `pred1(x)` could be the age based on an face picture input `x`, or the text translation of some speech record.
 
 There are several encryption schemes (among which MPC, FHE, SNN, etc.) but we here interested in Functional Encryption (FE) which can be used to encrypt quadratic networks as it is done [here](https://eprint.iacr.org/2018/206), where actually you are even given `x` encrypted (i.e. `Enc(x) -> Private -> output(x) ...`). One reason for this setting with two phases is that encryption is very expensive or restrictive (like FE as of today which only support a single quadratic operation), but you can improve the model accuracy by adding a neural network in clear which will leverage the encrypted part output.
 
@@ -25,7 +25,9 @@ So what's the use case? For example, imagine you provide a secure service to wri
 
 ## Our approach
 
-We aim at giving concrete examples of this in our repository to answer this question. We have searched for datasets which are suitable for two distinct and "relatively" independent tasks. A face dataset such as [this one](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/) which gathers images from imdb and wikipedia could be suitable, but as in our context we want to encrypt the first model with Functional Encryption, we need to choose a simpler task. Therefore, we have proposed an artificial letter character dataset, vastly inspired from MNIST, where several fonts were used to draw the characters. We have applied some noise and deformation to build a 60.000 item dataset.
+We give concrete examples of this in our repository to answer this question. Even if some existing datasets exist that are suitable for two distinct and "relatively" independent learning tasks, like the face dataset [imdb-wiki](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/), we have proposed a 60.000 items artificial letter character dataset inspired from MNIST, where several fonts were used to draw the characters to which deformation is added. Hence, we can ensure complete independence between the two features to classify and adjust the difficulty of classification to the current capabilities of Functional Encryption.
+
+![Bilby Stampede](./img/collateral_learning.png)
 
 Our work is detailed in the notebook section. Any comments are welcome!
 
