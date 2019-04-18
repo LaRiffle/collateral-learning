@@ -31,14 +31,15 @@ def build_confusion_matrix(pred_labels, n_labels):
     return matrix.astype(int)
 
 
-def show_confusion_matrix(pred_labels, task='family'):
-    if task == 'family':
-        n_labels = 5
-        legend = ['serif', 'cursive', 'fantasy', 'Georgia', 'arial']
+def show_confusion_matrix(pred_labels, task='font'):
+    if task == 'font':
+        n_labels = 2
+        legend = ['cursive', 'Georgia']
         fig_size = (10, 10)
-    elif task == 'char':
-        n_labels = 26
-        legend = [letter for letter in ascii_lowercase]
+    else:
+        assert task == 'char'
+        n_labels = 10
+        legend = [str(i) for i in range(10)]
         fig_size = (14, 14)
 
     confusion_matrix = build_confusion_matrix(pred_labels, n_labels)
