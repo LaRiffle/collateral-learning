@@ -1,3 +1,3 @@
-from .test import collateral_test
-from .train import collateral_train
-from .main import collateral_task
+from learn.collateral.data import get_data_loaders
+from learn.collateral.train import train
+from learn.collateral.test import test

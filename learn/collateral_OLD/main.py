@@ -3,7 +3,7 @@ import torch.optim as optim
 import torch.utils.data as utils
 
 from learn import build_tensor_dataset, load_data
-from learn.collateral import collateral_train, collateral_test
+from learn.collateral_OLD import collateral_train, collateral_test
 
 
 def collateral_task(args, model, collateral_model, prec_frac):

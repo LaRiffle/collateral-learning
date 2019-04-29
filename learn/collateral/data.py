@@ -13,11 +13,15 @@ import pickle
 
 def load_resistance_data(font1, font2):
 
+    base_name = f'dataset/character_dataset_{font1}_{font2}' \
+        if font1 is not None and font2 is not None \
+        else f'dataset/character_dataset'
+
     train_data, train_target_char, train_target_family = [], [], []
 
     # The training set
     for i in range(6):
-        with open(f'dataset/character_dataset_{font1}_{font2}_train{i}.pkl', 'rb') as input_file:
+        with open(f'{base_name}_train{i}.pkl', 'rb') as input_file:
             training_set = pickle.load(input_file)
             train_data_i, train_target_char_i, train_target_family_i = training_set
             train_data += train_data_i
@@ -25,7 +29,7 @@ def load_resistance_data(font1, font2):
             train_target_family += train_target_family_i
 
     # The testing set
-    with open(f'dataset/character_dataset_{font1}_{font2}_test.pkl', 'rb') as input_file:
+    with open(f'{base_name}_test.pkl', 'rb') as input_file:
         testing_set = pickle.load(input_file)
         test_data, test_target_char, test_target_family = testing_set
 
@@ -86,7 +90,7 @@ def get_datasets(font1, font2):
     return train_dataset, test_dataset
 
 
-def get_data_loaders(args, font1, font2):
+def get_data_loaders(args, font1=None, font2=None):
     torch.manual_seed(1)
 
     train_dataset, test_dataset = get_datasets(font1, font2)

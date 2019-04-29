@@ -11,7 +11,7 @@ class ResistanceNet(nn.Module):
     def __init__(self):
         super(ResistanceNet, self).__init__()
         self.proj1 = nn.Linear(784, 50)
-        self.diag1 = nn.Linear(50, 8)
+        self.diag1 = nn.Linear(50, 8, bias=False)
 
         # --- FFN for characters
         self.lin1 = nn.Linear(8, 16)

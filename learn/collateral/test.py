@@ -1,25 +1,38 @@
 import torch
+import torch.nn as nn
+import torch.optim as optim
 import torch.nn.functional as F
 
 
-def collateral_test(collateral_model, model, test_loader, prec_frac):
-    collateral_model.eval()
-    test_loss = 0
-    correct = 0
+def test(args, model, test_loader, new_adversary):
+    model.eval()
+    correct_char = 0
+    correct_font = 0
     with torch.no_grad():
         for data, target in test_loader:
-            data.fix_precision_(precision_fractional=prec_frac) # Convert to Fixed precision
-            data = model.transform(data)  # Just do the private part of the forward
-            data = data.float_precision()  # Convert back to Float
-            output = collateral_model(data)
-            test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
-            pred = output.argmax(1, keepdim=True)  # get the index of the max log-probability
-            correct += pred.eq(target.view_as(pred)).sum().item()
+            # Split the two targets
+            target_char = target[:, 0]
+            target_font = target[:, 1]
 
-    test_loss /= len(test_loader.dataset)
+            # Char evaluation
+            if not new_adversary:
+                output = model.forward_char(data)
+                pred = output.argmax(1, keepdim=True)
+                correct_char += pred.eq(target_char.view_as(pred)).sum().item()
 
-    acc = 100. * correct / len(test_loader.dataset)
-    print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)\n'.format(
-        test_loss, correct, len(test_loader.dataset), acc))
+            # Font evaluation
+            if not new_adversary:
+                output = model.forward_font(data)
+            else:
+                output = model.forward_adv_font(data)
+            pred = output.argmax(1, keepdim=True)
+            correct_font += pred.eq(target_font.view_as(pred)).sum().item()
 
-    return acc
+    acc_char = 100. * correct_char / len(test_loader.dataset)
+    acc_font = 100. * correct_font / len(test_loader.dataset)
+    print('\nTest set: Accuracy Char : {}/{} ({:.2f}%)\n          Accuracy Font : {}/{} ({:.2f}%)'.format(
+        correct_char, len(test_loader.dataset), acc_char, correct_font, len(test_loader.dataset), acc_font))
+
+    return acc_char, acc_font
+
+

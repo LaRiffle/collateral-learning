@@ -1,20 +1,72 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
 import torch.nn.functional as F
 
 
-def collateral_train(args, collateral_model, model, train_loader, adv_optimizer, epoch, prec_frac):
-    collateral_model.train()
+def train(args, model, train_loader, optimizer, epoch, alpha, initial_phase, perturbate, recover, new_collateral):
+    model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
-        data.fix_precision_(precision_fractional=prec_frac)  # Convert to Fixed precision
-        data = model.transform(data)  # Just do the private part of the forward
-        data = data.float_precision()  # Convert back to float
-        # Really start the ususal training with the collateral_model
-        adv_optimizer.zero_grad()
-        output = collateral_model(data)
-        loss = F.nll_loss(output, target)
+        # Split the two targets
+        target_char = target[:, 0]
+        target_font = target[:, 1]
 
-        loss.backward()
-        adv_optimizer.step()
+        # Phase 1
+        if initial_phase:  # Optimise Q + C
+            optimizer.zero_grad()
+            output = model.forward_char(data)
+            loss_char = F.nll_loss(output, target_char)
+            loss_char.backward()
+            optimizer.step()
+        elif perturbate or (recover and not new_collateral):  # Optimise Freezed(Q) + C
+            model.freeze('quad')
+            optimizer.zero_grad()
+            output_char = model.forward_char(data)
+            loss_char = F.nll_loss(output_char, target_char)
+            loss_char.backward()
+            optimizer.step()
+            model.unfreeze()
+
+        # Phase 2
+        if (initial_phase or perturbate): # Optimise Freezed(Q) + F
+            model.freeze('quad')
+            output_font = model.forward_font(data)
+            loss_font = F.nll_loss(output_font, target_font)
+            loss_font.backward()
+            optimizer.step()
+            model.unfreeze()
+        elif recover:  # Optimise Freezed(Q) + (new) F
+            model.freeze('quad')
+            optimizer.zero_grad()
+            if new_collateral:
+                output_font = model.forward_adv_font(data)
+            else:
+                output_font = model.forward_font(data)
+            loss_font = F.nll_loss(output_font, target_font)
+            loss_font.backward()
+            optimizer.step()
+            model.unfreeze()
+
+        # Phase 3
+        if perturbate:  # Optimize Q
+            model.freeze('font')
+            model.freeze('char')
+            optimizer.zero_grad()
+            output_char = model.forward_char(data)
+            loss_char = F.nll_loss(output_char, target_char)
+
+            output_font = model.forward_font(data)
+            loss_font = F.nll_loss(output_font, target_font)
+
+            loss = loss_char - alpha * loss_font
+            loss.backward()
+            optimizer.step()
+            model.unfreeze()
+
+        if not (initial_phase or perturbate):
+            loss_char = torch.zeros(1)
+
         if batch_idx % args.log_interval == 0:
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss Char: {:.6f} Loss Font: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
-                       100. * batch_idx / len(train_loader), loss.item()))
+                       100. * batch_idx / len(train_loader), loss_char.item(), loss_font.item()))
