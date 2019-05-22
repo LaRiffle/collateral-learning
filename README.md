@@ -29,6 +29,6 @@ We give concrete examples of this in our repository to answer this question. Eve
 
 ![Bilby Stampede](./img/collateral_learning.png)
 
-Our work is detailed in the notebook section. Any comments are welcome!
+Our work is detailed in the tutorials section. Any comments are welcome!
 
 If you're enthusiastic about our project, ⭐️ it to show your support! :heart:

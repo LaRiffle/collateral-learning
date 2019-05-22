@@ -43,7 +43,6 @@ def get_datasets(font1, font2, cv=6):
 
 
 def load_resistance_data(font1, font2, cv=6):
-    print('cv=', cv)
 
     base_name = f'dataset/character_dataset_{font1}_{font2}' \
         if font1 is not None and font2 is not None \
@@ -109,7 +108,6 @@ def get_collateral_datasets(font1, font2, letter, cv=6):
 
 
 def load_collateral_data(font1, font2, letter, cv=6):
-    print('cv=', cv)
     base_name = f'dataset/character_dataset'
     train_data, train_target_char, train_target_family = [], [], []
 
