@@ -1,5 +1,7 @@
 # Collateral Learning
 
+> **TL;DR** We use Functional Encryption combined with Adversarial Learning to perform privacy-preserving neural network evaluation. We provides a wide range of [tutorials](./tutorials) to help you better dive into the project.
+
 ## Motivation
 
 Imagine that you train a neural network to perform a specific task, and you discover it has also learned information which makes it possible to perform another completely different task, which is very sensitive. Is this possible? What can you do to prevent this?
@@ -29,6 +31,20 @@ We give concrete examples of this in our repository to answer this question. Eve
 
 ![Bilby Stampede](./img/collateral_learning.png)
 
-Our work is detailed in the tutorials section. Any comments are welcome!
+Our work is detailed in the [tutorials](./tutorials) section. Any comments are welcome!
+
+## Publication
+
+This work has been submitted and accepted at Neurips 2019:
+
+#### [Partially Encrypted Machine Learning using Functional Encryption](https://arxiv.org/abs/1905.10214)
+
+> Machine learning on encrypted data has received a lot of attention thanks to recent breakthroughs in homomorphic encryption and secure multi-party computation. It allows outsourcing computation to untrusted servers without sacrificing privacy of sensitive data. We propose a practical framework to perform partially encrypted and privacy-preserving predictions which combines adversarial training and functional encryption. We first present a new functional encryption scheme to efficiently compute quadratic functions so that the data owner controls what can be computed but is not involved in the calculation: it provides a decryption key which allows one to learn a specific function evaluation of some encrypted data. We then show how to use it in machine learning to partially encrypt neural networks with quadratic activation functions at evaluation time, and we provide a thorough analysis of the information leaks based on indistinguishability of data items of the same label. Last, since most encryption schemes cannot deal with the last thresholding operation used for classification, we propose a training method to prevent selected sensitive features from leaking, which adversarially optimizes the network against an adversary trying to identify these features. This is interesting for several existing works using partially encrypted machine learning as it comes with little reduction on the model's accuracy and significantly improves data privacy.
+
+It is a joined work from Theo Ryffel, Edouard Dufour-Sans, Romain Gay, Francis Bach, David Pointcheval.
+
+Slides are also available [here](https://www.drauo.de/static/slides/mlfe.pdf)
+
+## Support the project!
 
 If you're enthusiastic about our project, ⭐️ it to show your support! :heart:
