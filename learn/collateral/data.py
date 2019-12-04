@@ -17,20 +17,20 @@ def get_data_loaders(args, font1=None, font2=None, cv=6):
     train_dataset, test_dataset = get_datasets(font1, font2, cv)
 
     train_loader = utils.DataLoader(
-        train_dataset,
-        batch_size=args.batch_size, shuffle=True
+        train_dataset, batch_size=args.batch_size, shuffle=True
     )
 
     test_loader = utils.DataLoader(
-        test_dataset,
-        batch_size=args.test_batch_size, shuffle=True
+        test_dataset, batch_size=args.test_batch_size, shuffle=True
     )
     return train_loader, test_loader
 
 
 def get_datasets(font1, font2, cv=6):
     data = load_resistance_data(font1, font2, cv)
-    train_data, train_target_char, train_target_family, test_data, test_target_char, test_target_family = data
+    train_data, train_target_char, train_target_family, test_data, test_target_char, test_target_family = (
+        data
+    )
     # Merge the target datasets
     train_target = list(zip(train_target_char, train_target_family))
     test_target = list(zip(test_target_char, test_target_family))
@@ -44,18 +44,22 @@ def get_datasets(font1, font2, cv=6):
 
 def load_resistance_data(font1, font2, cv=6):
 
-    base_name = f'dataset/character_dataset_{font1}_{font2}' \
-        if font1 is not None and font2 is not None \
-        else f'dataset/character_dataset'
+    base_name = (
+        f"dataset/character_dataset_{font1}_{font2}"
+        if font1 is not None and font2 is not None
+        else f"dataset/character_dataset"
+    )
 
     train_data, train_target_char, train_target_family = [], [], []
 
-    data_files = [f'{base_name}_train{i}.pkl' for i in range(6)] + [f'{base_name}_test.pkl']
+    data_files = [f"{base_name}_train{i}.pkl" for i in range(6)] + [
+        f"{base_name}_test.pkl"
+    ]
 
     assert 0 <= cv <= len(data_files)
 
     for i, data_file in enumerate(data_files):
-        with open(data_file, 'rb') as input_file:
+        with open(data_file, "rb") as input_file:
             # Build the training set
             if i != cv:
                 training_set = pickle.load(input_file)
@@ -68,10 +72,17 @@ def load_resistance_data(font1, font2, cv=6):
                 testing_set = pickle.load(input_file)
                 test_data, test_target_char, test_target_family = testing_set
 
-    print('Training set', len(train_data), 'items')
-    print('Testing set ', len(test_data), 'items')
+    print("Training set", len(train_data), "items")
+    print("Testing set ", len(test_data), "items")
 
-    data = train_data, train_target_char, train_target_family, test_data, test_target_char, test_target_family
+    data = (
+        train_data,
+        train_target_char,
+        train_target_family,
+        test_data,
+        test_target_char,
+        test_target_family,
+    )
 
     return data
 
@@ -82,20 +93,20 @@ def get_collateral_data_loaders(args, font1, font2, letter, cv=6):
     train_dataset, test_dataset = get_collateral_datasets(font1, font2, letter, cv)
 
     train_loader = utils.DataLoader(
-        train_dataset,
-        batch_size=args.batch_size, shuffle=True
+        train_dataset, batch_size=args.batch_size, shuffle=True
     )
 
     test_loader = utils.DataLoader(
-        test_dataset,
-        batch_size=args.test_batch_size, shuffle=True
+        test_dataset, batch_size=args.test_batch_size, shuffle=True
     )
     return train_loader, test_loader
 
 
 def get_collateral_datasets(font1, font2, letter, cv=6):
     data = load_collateral_data(font1, font2, letter, cv)
-    train_data, train_target_char, train_target_family, test_data, test_target_char, test_target_family = data
+    train_data, train_target_char, train_target_family, test_data, test_target_char, test_target_family = (
+        data
+    )
     # Merge the target datasets
     train_target = list(zip(train_target_char, train_target_family))
     test_target = list(zip(test_target_char, test_target_family))
@@ -108,16 +119,17 @@ def get_collateral_datasets(font1, font2, letter, cv=6):
 
 
 def load_collateral_data(font1, font2, letter, cv=6):
-    base_name = f'dataset/character_dataset'
+    base_name = f"dataset/character_dataset"
     train_data, train_target_char, train_target_family = [], [], []
 
-    data_files = [f'{base_name}_{font1}_{font2}_{letter}_train{i}.pkl' for i in range(6)] \
-                 + [f'{base_name}_{font1}_{font2}_{letter}_test.pkl']
+    data_files = [
+        f"{base_name}_{font1}_{font2}_{letter}_train{i}.pkl" for i in range(6)
+    ] + [f"{base_name}_{font1}_{font2}_{letter}_test.pkl"]
 
     assert 0 <= cv <= len(data_files)
 
     for i, data_file in enumerate(data_files):
-        with open(data_file, 'rb') as input_file:
+        with open(data_file, "rb") as input_file:
             # Build the training set
             if i != cv:
                 training_set = pickle.load(input_file)
@@ -130,10 +142,17 @@ def load_collateral_data(font1, font2, letter, cv=6):
                 testing_set = pickle.load(input_file)
                 test_data, test_target_char, test_target_family = testing_set
 
-    print('Training set', len(train_data), 'items')
-    print('Testing set ', len(test_data), 'items')
+    print("Training set", len(train_data), "items")
+    print("Testing set ", len(test_data), "items")
 
-    data = train_data, train_target_char, train_target_family, test_data, test_target_char, test_target_family
+    data = (
+        train_data,
+        train_target_char,
+        train_target_family,
+        test_data,
+        test_target_char,
+        test_target_family,
+    )
 
     return data
 

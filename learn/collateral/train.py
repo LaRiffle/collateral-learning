@@ -4,7 +4,18 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 
-def train(args, model, train_loader, optimizer, epoch, alpha, initial_phase, perturbate, recover, new_collateral):
+def train(
+    args,
+    model,
+    train_loader,
+    optimizer,
+    epoch,
+    alpha,
+    initial_phase,
+    perturbate,
+    recover,
+    new_collateral,
+):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         # Split the two targets
@@ -19,7 +30,7 @@ def train(args, model, train_loader, optimizer, epoch, alpha, initial_phase, per
             loss_char.backward()
             optimizer.step()
         elif perturbate or (recover and not new_collateral):  # Optimise Freezed(Q) + C
-            model.freeze('quad')
+            model.freeze("quad")
             optimizer.zero_grad()
             output_char = model.forward_char(data)
             loss_char = F.nll_loss(output_char, target_char)
@@ -28,15 +39,15 @@ def train(args, model, train_loader, optimizer, epoch, alpha, initial_phase, per
             model.unfreeze()
 
         # Phase 2
-        if (initial_phase or perturbate): # Optimise Freezed(Q) + F
-            model.freeze('quad')
+        if initial_phase or perturbate:  # Optimise Freezed(Q) + F
+            model.freeze("quad")
             output_font = model.forward_font(data)
             loss_font = F.nll_loss(output_font, target_font)
             loss_font.backward()
             optimizer.step()
             model.unfreeze()
         elif recover:  # Optimise Freezed(Q) + (new) F
-            model.freeze('quad')
+            model.freeze("quad")
             optimizer.zero_grad()
             if new_collateral:
                 output_font = model.forward_adv_font(data)
@@ -49,8 +60,8 @@ def train(args, model, train_loader, optimizer, epoch, alpha, initial_phase, per
 
         # Phase 3
         if perturbate:  # Optimize Q
-            model.freeze('font')
-            model.freeze('char')
+            model.freeze("font")
+            model.freeze("char")
             optimizer.zero_grad()
             output_char = model.forward_char(data)
             loss_char = F.nll_loss(output_char, target_char)
@@ -67,6 +78,13 @@ def train(args, model, train_loader, optimizer, epoch, alpha, initial_phase, per
             loss_char = torch.zeros(1)
 
         if batch_idx % args.log_interval == 0:
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss Char: {:.6f} Loss Font: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_loader.dataset),
-                       100. * batch_idx / len(train_loader), loss_char.item(), loss_font.item()))
+            print(
+                "Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss Char: {:.6f} Loss Font: {:.6f}".format(
+                    epoch,
+                    batch_idx * len(data),
+                    len(train_loader.dataset),
+                    100.0 * batch_idx / len(train_loader),
+                    loss_char.item(),
+                    loss_font.item(),
+                )
+            )

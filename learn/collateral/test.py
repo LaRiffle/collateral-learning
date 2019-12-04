@@ -28,11 +28,17 @@ def test(args, model, test_loader, new_adversary):
             pred = output.argmax(1, keepdim=True)
             correct_font += pred.eq(target_font.view_as(pred)).sum().item()
 
-    acc_char = 100. * correct_char / len(test_loader.dataset)
-    acc_font = 100. * correct_font / len(test_loader.dataset)
-    print('\nTest set: Accuracy Char : {}/{} ({:.2f}%)\n          Accuracy Font : {}/{} ({:.2f}%)'.format(
-        correct_char, len(test_loader.dataset), acc_char, correct_font, len(test_loader.dataset), acc_font))
+    acc_char = 100.0 * correct_char / len(test_loader.dataset)
+    acc_font = 100.0 * correct_font / len(test_loader.dataset)
+    print(
+        "\nTest set: Accuracy Char : {}/{} ({:.2f}%)\n          Accuracy Font : {}/{} ({:.2f}%)".format(
+            correct_char,
+            len(test_loader.dataset),
+            acc_char,
+            correct_font,
+            len(test_loader.dataset),
+            acc_font,
+        )
+    )
 
     return acc_char, acc_font
-
-

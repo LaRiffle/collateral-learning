@@ -69,14 +69,14 @@ class ResistanceNet(nn.Module):
 
     def get_params(self, net):
         """Select the params for a given part of the net"""
-        if net == 'quad':
+        if net == "quad":
             layers = [self.proj1, self.diag1]
-        elif net == 'char':
+        elif net == "char":
             layers = [self.lin1, self.lin2]
-        elif net == 'font':
+        elif net == "font":
             layers = [self.jct, self.fc1, self.fc2, self.conv1, self.conv2]
         else:
-            raise AttributeError(f'{net} type not recognized')
+            raise AttributeError(f"{net} type not recognized")
         params = [p for layer in layers for p in layer.parameters()]
         return params
 
@@ -90,4 +90,3 @@ class ResistanceNet(nn.Module):
         """Unfreeze the net"""
         for param in self.parameters():
             param.requires_grad = True
-

@@ -11,7 +11,19 @@ from .models import QuadNet, CNN
 
 from learn.utils import Parser, load_data, build_tensor_dataset
 
-def main(model_type='quad', args=None, model=None, optimizer=None, task='char', reg_l2=False, reg=0.01, epochs=None, return_model=False, return_pred_label=False):
+
+def main(
+    model_type="quad",
+    args=None,
+    model=None,
+    optimizer=None,
+    task="char",
+    reg_l2=False,
+    reg=0.01,
+    epochs=None,
+    return_model=False,
+    return_pred_label=False,
+):
     """
     Perform a learning phase
 
@@ -31,15 +43,17 @@ def main(model_type='quad', args=None, model=None, optimizer=None, task='char', 
         assert epochs is None
 
     data = load_data()
-    train_data, train_target_char, train_target_family, test_data, test_target_char, test_target_family = data
+    train_data, train_target_char, train_target_family, test_data, test_target_char, test_target_family = (
+        data
+    )
 
-    target_types = ['font', 'char']
+    target_types = ["font", "char"]
     assert task in target_types
-    print('Learning on', task, 'and reg_l2' if reg_l2 else '')
-    if task == 'font':
+    print("Learning on", task, "and reg_l2" if reg_l2 else "")
+    if task == "font":
         train_target = train_target_family
         test_target = test_target_family
-    elif task == 'char':
+    elif task == "char":
         train_target = train_target_char
         test_target = test_target_char
 
@@ -47,13 +61,11 @@ def main(model_type='quad', args=None, model=None, optimizer=None, task='char', 
     test_dataset = build_tensor_dataset(test_data, test_target)
 
     train_loader = utils.DataLoader(
-        train_dataset,
-        batch_size=args.batch_size, shuffle=True
+        train_dataset, batch_size=args.batch_size, shuffle=True
     )
 
     test_loader = utils.DataLoader(
-        test_dataset,
-        batch_size=args.test_batch_size, shuffle=True
+        test_dataset, batch_size=args.test_batch_size, shuffle=True
     )
 
     if optimizer is None:
@@ -65,7 +77,9 @@ def main(model_type='quad', args=None, model=None, optimizer=None, task='char', 
         train(args, model, train_loader, optimizer, epoch, model_type, reg_l2, reg)
         if epoch <= args.epochs:
             if return_pred_label:
-                test_perf, pred_labels = test(args, model, test_loader, return_pred_label)
+                test_perf, pred_labels = test(
+                    args, model, test_loader, return_pred_label
+                )
             else:
                 test_perf = test(args, model, test_loader)
             test_perfs.append(test_perf)
