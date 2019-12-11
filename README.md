@@ -37,7 +37,7 @@ Our work is detailed in the [tutorials](./tutorials) section. Any comments are w
 
 ## Publication
 
-This work has been submitted and accepted at Neurips 2019:
+This work has been published at Neurips 2019 and the poster can be found [here](./img/poster_neurips_2019.pdf).
 
 #### [Partially Encrypted Machine Learning using Functional Encryption](https://arxiv.org/abs/1905.10214)
 
